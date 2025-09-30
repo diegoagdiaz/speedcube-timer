@@ -1,3 +1,4 @@
+// src/components/TimesList.js
 import React from 'react';
 
 function TimesList({ solves, onDelete, onTogglePenalty, onSelectSolve }) {
@@ -24,9 +25,10 @@ function TimesList({ solves, onDelete, onTogglePenalty, onSelectSolve }) {
           <li key={solve.id} className="solve-item" style={{ padding: '5px 0', borderBottom: '1px solid #555', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => onSelectSolve(solve)}>
             <span style={{ color: getTimeColor(solve) }}>{index + 1}. {formatTime(solve)}</span>
             <div style={{ opacity: 0, transition: 'opacity 0.3s' }} className="buttons">
-              <button onClick={() => onTogglePenalty(solve.id, '+2')} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>+2</button>
-              <button onClick={() => onTogglePenalty(solve.id, 'DNF')} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>DNF</button>
-              <button onClick={() => onDelete(solve.id)} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>Delete</button>
+              {/* Updated onClick handlers below */}
+              <button onClick={(e) => { e.stopPropagation(); onTogglePenalty(solve.id, '+2'); }} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>+2</button>
+              <button onClick={(e) => { e.stopPropagation(); onTogglePenalty(solve.id, 'DNF'); }} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>DNF</button>
+              <button onClick={(e) => { e.stopPropagation(); onDelete(solve.id); }} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>Delete</button>
             </div>
           </li>
         ))}
