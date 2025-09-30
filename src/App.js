@@ -19,29 +19,26 @@ function App() {
   const [scramble, setScramble] = useState('');
   const [selectedSolve, setSelectedSolve] = useState(null);
   const [inspectionEnabled, setInspectionEnabled] = useState(() => {
-    const saved = localStorage.getItem('inspectionEnabled');
-    return saved !== null ? JSON.parse(saved) : true;
+    const saved = localStorage.getItem('speedcube-app-settings');
+    return saved ? JSON.parse(saved).inspectionEnabled ?? true : true;
   });
   const [inspectionDuration, setInspectionDuration] = useState(() => {
-    const saved = localStorage.getItem('inspectionDuration');
-    return saved !== null ? JSON.parse(saved) : 15;
+    const saved = localStorage.getItem('speedcube-app-settings');
+    return saved ? JSON.parse(saved).inspectionDuration ?? 15 : 15;
   });
 
   useEffect(() => {
     setScramble(generateScramble());
   }, []);
 
+  // Consolidated localStorage persistence
   useEffect(() => {
-    localStorage.setItem('speedcube-solves', JSON.stringify(solves));
-  }, [solves]);
-
-  useEffect(() => {
-    localStorage.setItem('inspectionEnabled', JSON.stringify(inspectionEnabled));
-  }, [inspectionEnabled]);
-
-  useEffect(() => {
-    localStorage.setItem('inspectionDuration', JSON.stringify(inspectionDuration));
-  }, [inspectionDuration]);
+    const settings = {
+      inspectionEnabled,
+      inspectionDuration
+    };
+    localStorage.setItem('speedcube-app-settings', JSON.stringify(settings));
+  }, [inspectionEnabled, inspectionDuration]);
 
   useEffect(() => {
     if (selectedSolve) {
