@@ -12,7 +12,10 @@ import { generateScramble } from './utils/calculations';
 import './App.css';
 
 function App() {
-  const [solves, setSolves] = useState([]);
+  const [solves, setSolves] = useState(() => {
+    const saved = localStorage.getItem('speedcube-solves');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [scramble, setScramble] = useState('');
   const [selectedSolve, setSelectedSolve] = useState(null);
   const [inspectionEnabled, setInspectionEnabled] = useState(() => {
@@ -25,10 +28,6 @@ function App() {
   });
 
   useEffect(() => {
-    const savedSolves = localStorage.getItem('speedcube-solves');
-    if (savedSolves) {
-      setSolves(JSON.parse(savedSolves));
-    }
     setScramble(generateScramble());
   }, []);
 
