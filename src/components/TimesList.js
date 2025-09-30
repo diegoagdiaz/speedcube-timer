@@ -22,9 +22,9 @@ function TimesList({ solves, onDelete, onTogglePenalty, onSelectSolve }) {
   };
 
   return (
-    <div style={{ backgroundColor: 'rgba(26, 26, 26, 0.9)', padding: '10px', borderRadius: '5px' }}>
-      <h2 style={{ marginTop: 0, marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' }}>Solve Times</h2>
-      <ul style={{ listStyleType: 'none', padding: 0, maxHeight: '400px', overflowY: 'auto' }}>
+    <div style={{ backgroundColor: 'rgba(26, 26, 26, 0.9)', padding: '10px', borderRadius: '5px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <h3 style={{ marginTop: 0, marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' }}>Solve Times</h3>
+      <ul style={{ listStyleType: 'none', padding: 0, flex: 1, overflowY: 'auto' }}>
         {solves.map((solve, index) => (
           <li key={solve.id} className="solve-item" style={{ padding: '5px 0', borderBottom: '1px solid #555', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => onSelectSolve(solve)}>
             <span style={getTimeStyle(solve)}>{index + 1}. {formatTime(solve)}</span>

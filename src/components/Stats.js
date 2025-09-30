@@ -19,9 +19,9 @@ function Stats({ solves }) {
   }));
 
   return (
-    <div style={{ backgroundColor: 'var(--black)', padding: '10px', borderRadius: '5px' }}>
-      <h2 style={{ marginTop: 0, marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' }}>Statistics</h2>
-      <div style={{ marginBottom: '20px' }}>
+    <div style={{ backgroundColor: 'rgba(26, 26, 26, 0.9)', padding: '10px', borderRadius: '5px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <h3 style={{ marginTop: 0, marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' }}>Statistics</h3>
+      <div style={{ marginBottom: '10px', flexShrink: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Mean of 3:</span><span>{mean3 ? mean3.toFixed(2) + 's' : 'N/A'}</span></div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Average of 5:</span><span>{ao5 ? ao5.toFixed(2) + 's' : 'N/A'}</span></div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Best Time:</span><span>{best ? best.toFixed(2) + 's' : 'N/A'}</span></div>
@@ -30,9 +30,8 @@ function Stats({ solves }) {
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Total Solves:</span><span>{solves.length}</span></div>
       </div>
       {chartData.length > 0 && (
-        <div style={{ width: '100%', height: 200 }}>
-          <h3>Time Trend</h3>
-          <ResponsiveContainer>
+        <div style={{ flex: 1 }}>
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="solve" />

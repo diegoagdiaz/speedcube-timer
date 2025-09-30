@@ -22,6 +22,32 @@ html, body {
   overflow: hidden;
 }
 
+.main-view {
+  margin-left: 200px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.timer-wrapper {
+  flex-grow: 1; /* Allows the timer area to expand and fill all available vertical space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.widget-area {
+  max-height: 35vh; /* Constrains the widget area to a maximum of 35% of the viewport height */
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 10px;
+}
+
+.widget-slot {
+  flex: 1;
+}
+
 h1 {
   text-align: center;
   color: var(--white);

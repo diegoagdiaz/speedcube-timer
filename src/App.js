@@ -3,6 +3,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Timer from './components/Timer';
 import TimesList from './components/TimesList';
 import Stats from './components/Stats';
+import VisualScramble from './components/VisualScramble';
+import LastSolve from './components/LastSolve';
+import Consistency from './components/Consistency';
+import TimeGraph from './components/TimeGraph';
+import TimeDistribution from './components/TimeDistribution';
 import SolveDetailsModal from './components/SolveDetailsModal';
 import Sidebar from './components/Sidebar';
 import Statistics from './components/Statistics';
@@ -26,6 +31,10 @@ function App() {
     const saved = localStorage.getItem('speedcube-app-settings');
     return saved ? JSON.parse(saved).inspectionDuration ?? 15 : 15;
   });
+  const [widgets, setWidgets] = useState(() => {
+    const saved = localStorage.getItem('speedcube-widgets');
+    return saved ? JSON.parse(saved) : ['Solves', 'Stats', 'None'];
+  });
 
   useEffect(() => {
     setScramble(generateScramble());
@@ -46,6 +55,10 @@ function App() {
       setSelectedSolve(updatedSolve);
     }
   }, [solves, selectedSolve]);
+
+  useEffect(() => {
+    localStorage.setItem('speedcube-widgets', JSON.stringify(widgets));
+  }, [widgets]);
 
   const handleSaveTime = (time, penalty) => {
     const newSolve = { id: Date.now(), baseTime: time, penalty, scramble, timestamp: new Date() };
@@ -96,18 +109,43 @@ function App() {
     setInspectionEnabled(!inspectionEnabled);
   };
 
+  const renderWidget = (widgetName) => {
+    switch (widgetName) {
+      case 'Solves':
+        return <TimesList solves={solves} onDelete={handleDelete} onTogglePenalty={togglePenalty} onSelectSolve={setSelectedSolve} />;
+      case 'Stats':
+        return <Stats solves={solves} />;
+      case 'Visual Scramble':
+        return <VisualScramble scramble={scramble} />;
+      case 'Last Solve':
+        return <LastSolve solves={solves} />;
+      case 'Consistency':
+        return <Consistency solves={solves} />;
+      case 'Time Graph':
+        return <TimeGraph solves={solves} />;
+      case 'Time Distribution':
+        return <TimeDistribution solves={solves} />;
+      case 'None':
+      default:
+        return <div style={{ height: '100%', backgroundColor: 'rgba(26, 26, 26, 0.9)', borderRadius: '5px' }}></div>;
+    }
+  };
+
   return (
     <BrowserRouter>
       <Sidebar />
       <Routes>
         <Route path="/" element={
-          <div style={{ marginLeft: '200px' }}>
-            <Timer onSaveTime={handleSaveTime} scramble={scramble} inspectionEnabled={inspectionEnabled} inspectionDuration={inspectionDuration} onToggleInspection={toggleInspection} />
-            <div style={{ position: 'absolute', top: '120px', left: '220px', width: '250px', maxHeight: 'calc(100vh - 200px)', overflow: 'auto', zIndex: 10 }}>
-              <TimesList solves={solves} onDelete={handleDelete} onTogglePenalty={togglePenalty} onSelectSolve={setSelectedSolve} />
+          <div className="main-view">
+            <div className="timer-wrapper">
+              <Timer onSaveTime={handleSaveTime} scramble={scramble} inspectionEnabled={inspectionEnabled} inspectionDuration={inspectionDuration} onToggleInspection={toggleInspection} />
             </div>
-            <div style={{ position: 'absolute', top: '120px', right: '20px', width: '250px', maxHeight: 'calc(100vh - 200px)', overflow: 'visible', zIndex: 10 }}>
-              <Stats solves={solves} />
+            <div className="widget-area">
+              {widgets.map((widget, index) => (
+                <div key={index} className="widget-slot">
+                  {renderWidget(widget)}
+                </div>
+              ))}
             </div>
             <SolveDetailsModal
               solve={selectedSolve}
@@ -119,7 +157,7 @@ function App() {
           </div>
         } />
         <Route path="/stats" element={<Statistics solves={solves} />} />
-        <Route path="/settings" element={<Settings clearTimes={clearTimes} exportTimes={exportTimes} inspectionEnabled={inspectionEnabled} inspectionDuration={inspectionDuration} setInspectionEnabled={setInspectionEnabled} setInspectionDuration={setInspectionDuration} />} />
+        <Route path="/settings" element={<Settings clearTimes={clearTimes} exportTimes={exportTimes} inspectionEnabled={inspectionEnabled} inspectionDuration={inspectionDuration} setInspectionEnabled={setInspectionEnabled} setInspectionDuration={setInspectionDuration} widgets={widgets} setWidgets={setWidgets} />} />
         <Route path="/tutorial" element={<Tutorial />} />
       </Routes>
     </BrowserRouter>

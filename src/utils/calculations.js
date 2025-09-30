@@ -24,6 +24,30 @@ function getSessionAverage(times) {
   return times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : null;
 }
 
+function calculateStandardDeviation(times) {
+  if (times.length < 2) return null;
+  const mean = times.reduce((a, b) => a + b, 0) / times.length;
+  const variance = times.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / times.length;
+  return Math.sqrt(variance);
+}
+
+function calculateTimeDistribution(times) {
+  if (times.length === 0) return [];
+  const min = Math.floor(Math.min(...times));
+  const max = Math.ceil(Math.max(...times));
+  const bins = [];
+  for (let i = min; i < max; i++) {
+    bins.push({ range: `${i}-${i+1}s`, count: 0 });
+  }
+  times.forEach(time => {
+    const binIndex = Math.floor(time) - min;
+    if (binIndex >= 0 && binIndex < bins.length) {
+      bins[binIndex].count++;
+    }
+  });
+  return bins.filter(bin => bin.count > 0);
+}
+
 function generateScramble() {
   const faces = ['R', 'L', 'U', 'D', 'F', 'B'];
   const modifiers = ['', "'", '2'];
@@ -44,4 +68,4 @@ function generateScramble() {
   return scramble.join(' ');
 }
 
-export { calculateMeanOf3, calculateAverageOf5, getBestTime, getWorstTime, getSessionAverage, generateScramble };
+export { calculateMeanOf3, calculateAverageOf5, getBestTime, getWorstTime, getSessionAverage, calculateStandardDeviation, calculateTimeDistribution, generateScramble };
