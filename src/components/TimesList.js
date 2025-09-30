@@ -11,10 +11,14 @@ function TimesList({ solves, onDelete, onTogglePenalty, onSelectSolve }) {
     return `${base.toFixed(2)}s`;
   };
 
-  const getTimeColor = (solve) => {
-    if (solve.penalty === '+2') return '#ffa500'; // orange
-    if (solve.penalty === 'DNF') return '#ff0000'; // red
-    return '#ffffff'; // white
+  const getTimeStyle = (solve) => {
+    if (solve.penalty === '+2') {
+      return { color: 'orange', textShadow: '0 0 5px orange' };
+    }
+    if (solve.penalty === 'DNF') {
+      return { color: 'red', textShadow: '0 0 5px red' };
+    }
+    return { color: 'var(--white)', textShadow: 'none' };
   };
 
   return (
@@ -23,11 +27,11 @@ function TimesList({ solves, onDelete, onTogglePenalty, onSelectSolve }) {
       <ul style={{ listStyleType: 'none', padding: 0, maxHeight: '400px', overflowY: 'auto' }}>
         {solves.map((solve, index) => (
           <li key={solve.id} className="solve-item" style={{ padding: '5px 0', borderBottom: '1px solid #555', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => onSelectSolve(solve)}>
-            <span style={{ color: getTimeColor(solve) }}>{index + 1}. {formatTime(solve)}</span>
+            <span style={getTimeStyle(solve)}>{index + 1}. {formatTime(solve)}</span>
             <div style={{ opacity: 0, transition: 'opacity 0.3s' }} className="buttons">
               {/* Updated onClick handlers below */}
-              <button onClick={(e) => { e.stopPropagation(); onTogglePenalty(solve.id, '+2'); }} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>+2</button>
-              <button onClick={(e) => { e.stopPropagation(); onTogglePenalty(solve.id, 'DNF'); }} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>DNF</button>
+              <button onClick={(e) => { e.stopPropagation(); onTogglePenalty(solve.id, '+2'); }} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px', backgroundColor: (solve.penalty === '+2' || solve.penalty === 'DNF') ? 'gray' : undefined, color: solve.penalty === '+2' ? 'orange' : 'var(--white)' }}>+2</button>
+              <button onClick={(e) => { e.stopPropagation(); onTogglePenalty(solve.id, 'DNF'); }} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px', backgroundColor: (solve.penalty === '+2' || solve.penalty === 'DNF') ? 'gray' : undefined, color: solve.penalty === 'DNF' ? 'red' : 'var(--white)' }}>DNF</button>
               <button onClick={(e) => { e.stopPropagation(); onDelete(solve.id); }} style={{ margin: '0 2px', padding: '2px 6px', fontSize: '12px' }}>Delete</button>
             </div>
           </li>

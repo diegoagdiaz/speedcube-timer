@@ -26,6 +26,16 @@ function SolveDetailsModal({ solve, onClose, onTogglePenalty, onDelete, onUpdate
     return new Date(timestamp).toLocaleString();
   };
 
+  const getTimeStyle = (solve) => {
+    if (solve.penalty === '+2') {
+      return { color: 'orange', textShadow: '0 0 5px orange' };
+    }
+    if (solve.penalty === 'DNF') {
+      return { color: 'red', textShadow: '0 0 5px red' };
+    }
+    return { color: 'var(--white)', textShadow: 'none' };
+  };
+
   const handleDeleteAndClose = () => {
     onDelete(solve.id);
     onClose();
@@ -51,12 +61,12 @@ function SolveDetailsModal({ solve, onClose, onTogglePenalty, onDelete, onUpdate
       
       {/* Modal Content */}
       <div style={{
-        backgroundColor: '#282828',
+        backgroundColor: 'var(--black)',
         padding: '20px',
         borderRadius: '12px',
         width: '90%',
         maxWidth: '440px',
-        color: 'white',
+        color: 'var(--white)',
         display: 'flex',          // Use Flexbox
         flexDirection: 'column',  // Stack children vertically
         alignItems: 'center',     // Center children horizontally
@@ -65,7 +75,7 @@ function SolveDetailsModal({ solve, onClose, onTogglePenalty, onDelete, onUpdate
 
         {/* Header: Time and Edit Button */}
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '28px', fontWeight: 'bold' }}>{formatTime(solve)}</h2>
+          <h2 style={{ margin: 0, fontSize: '28px', fontWeight: 'bold', ...getTimeStyle(solve) }}>{formatTime(solve)}</h2>
           {!isEditing && <button onClick={() => setIsEditing(true)} style={{ padding: '6px 12px', fontSize: '14px' }}>Edit</button>}
         </div>
 
@@ -77,8 +87,8 @@ function SolveDetailsModal({ solve, onClose, onTogglePenalty, onDelete, onUpdate
           </div>
         ) : (
           <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={() => onTogglePenalty(solve.id, '+2')} style={{ padding: '6px 12px', fontSize: '14px' }}>+2</button>
-            <button onClick={() => onTogglePenalty(solve.id, 'DNF')} style={{ padding: '6px 12px', fontSize: '14px' }}>DNF</button>
+            <button onClick={() => onTogglePenalty(solve.id, '+2')} style={{ padding: '6px 12px', fontSize: '14px', backgroundColor: solve.penalty === '+2' ? 'var(--azure)' : undefined, color: solve.penalty === '+2' ? 'orange' : 'var(--white)' }}>+2</button>
+            <button onClick={() => onTogglePenalty(solve.id, 'DNF')} style={{ padding: '6px 12px', fontSize: '14px', backgroundColor: solve.penalty === 'DNF' ? 'var(--azure)' : undefined, color: solve.penalty === 'DNF' ? 'red' : 'var(--white)' }}>DNF</button>
             <button onClick={handleDeleteAndClose} style={{ padding: '6px 12px', fontSize: '14px' }}>Delete</button>
           </div>
         )}
@@ -102,7 +112,7 @@ function SolveDetailsModal({ solve, onClose, onTogglePenalty, onDelete, onUpdate
             }}
           />
         ) : (
-          <p style={{ color: '#b3b3b3', fontSize: '15px', wordWrap: 'break-word', textAlign: 'center', margin: 0 }}>
+          <p style={{ color: 'var(--light-blue)', fontSize: '15px', wordWrap: 'break-word', textAlign: 'center', margin: 0 }}>
             {solve.scramble}
           </p>
         )}
@@ -113,7 +123,7 @@ function SolveDetailsModal({ solve, onClose, onTogglePenalty, onDelete, onUpdate
         </div>
 
         {/* Timestamp */}
-        <p style={{ color: '#888', fontSize: '12px', margin: 0 }}>
+        <p style={{ color: 'var(--light-blue)', fontSize: '12px', margin: 0 }}>
           {formatDate(solve.timestamp)}
         </p>
         

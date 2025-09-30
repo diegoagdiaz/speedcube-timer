@@ -1,9 +1,17 @@
+:root {
+  --black: #000501ff;
+  --eerie-black: #1b2323ff;
+  --light-blue: #a6cfd5ff;
+  --azure: #1b7edaff;
+  --white: #ffffff;
+}
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #000000;
-  color: #ffffff;
+  background-color: var(--black);
+  color: var(--white);
   font-family: 'Arial', sans-serif;
 }
 
@@ -16,13 +24,13 @@ html, body {
 
 h1 {
   text-align: center;
-  color: #ff6b6b;
+  color: var(--white);
 }
 
 button {
-  background-color: #1a1a1a;
-  color: #ffffff;
-  border: none;
+  background-color: var(--black);
+  color: var(--white);
+  border: 2px solid var(--azure);
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
@@ -31,24 +39,13 @@ button {
   padding: 10px 20px;
 }
 
-button::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-  border-radius: 7px;
-  z-index: -1;
-}
 
 .solve-item:hover .buttons {
   opacity: 1 !important;
 }
 
 button:hover {
-  background-color: #333333;
+  background-color: var(--eerie-black);
 }
 
 button:disabled {
@@ -57,6 +54,3 @@ button:disabled {
 }
 
 
-button:disabled::before {
-  background: #cccccc;
-}

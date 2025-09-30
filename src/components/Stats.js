@@ -19,7 +19,7 @@ function Stats({ solves }) {
   }));
 
   return (
-    <div style={{ backgroundColor: 'rgba(26, 26, 26, 0.9)', padding: '10px', borderRadius: '5px' }}>
+    <div style={{ backgroundColor: 'var(--black)', padding: '10px', borderRadius: '5px' }}>
       <h2 style={{ marginTop: 0, marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' }}>Statistics</h2>
       <div style={{ marginBottom: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Mean of 3:</span><span>{mean3 ? mean3.toFixed(2) + 's' : 'N/A'}</span></div>

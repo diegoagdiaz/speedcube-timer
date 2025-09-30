@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Timer from './components/Timer';
 import TimesList from './components/TimesList';
 import Stats from './components/Stats';
 import SolveDetailsModal from './components/SolveDetailsModal';
+import Sidebar from './components/Sidebar';
+import Statistics from './components/Statistics';
+import Settings from './components/Settings';
+import Tutorial from './components/Tutorial';
 import { generateScramble } from './utils/calculations';
 import './App.css';
 
@@ -10,6 +15,14 @@ function App() {
   const [solves, setSolves] = useState([]);
   const [scramble, setScramble] = useState('');
   const [selectedSolve, setSelectedSolve] = useState(null);
+  const [inspectionEnabled, setInspectionEnabled] = useState(() => {
+    const saved = localStorage.getItem('inspectionEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+  const [inspectionDuration, setInspectionDuration] = useState(() => {
+    const saved = localStorage.getItem('inspectionDuration');
+    return saved !== null ? JSON.parse(saved) : 15;
+  });
 
   useEffect(() => {
     const savedSolves = localStorage.getItem('speedcube-solves');
@@ -24,14 +37,22 @@ function App() {
   }, [solves]);
 
   useEffect(() => {
+    localStorage.setItem('inspectionEnabled', JSON.stringify(inspectionEnabled));
+  }, [inspectionEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('inspectionDuration', JSON.stringify(inspectionDuration));
+  }, [inspectionDuration]);
+
+  useEffect(() => {
     if (selectedSolve) {
       const updatedSolve = solves.find(s => s.id === selectedSolve.id);
       setSelectedSolve(updatedSolve);
     }
   }, [solves, selectedSolve]);
 
-  const handleSaveTime = (time) => {
-    const newSolve = { id: Date.now(), baseTime: time, penalty: null, scramble, timestamp: new Date() };
+  const handleSaveTime = (time, penalty) => {
+    const newSolve = { id: Date.now(), baseTime: time, penalty, scramble, timestamp: new Date() };
     setSolves(prevSolves => [...prevSolves, newSolve]);
     setScramble(generateScramble());
   };
@@ -75,31 +96,37 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
+  const toggleInspection = () => {
+    setInspectionEnabled(!inspectionEnabled);
+  };
+
   return (
-    <div className="App">
-      <Timer onSaveTime={handleSaveTime} scramble={scramble} />
-      <div style={{ position: 'absolute', top: '120px', left: '20px', width: '250px', maxHeight: 'calc(100vh - 200px)', overflow: 'auto', zIndex: 10 }}>
-        <TimesList solves={solves} onDelete={handleDelete} onTogglePenalty={togglePenalty} onSelectSolve={setSelectedSolve} />
-      </div>
-      <div style={{ position: 'absolute', top: '120px', right: '20px', width: '250px', maxHeight: 'calc(100vh - 200px)', overflow: 'visible', zIndex: 10 }}>
-        <Stats solves={solves} />
-      </div>
-      <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)' }}>
-        <button onClick={clearTimes} style={{ margin: '0 10px', padding: '8px 16px', fontSize: '14px' }}>
-          Clear All Times
-        </button>
-        <button onClick={exportTimes} style={{ margin: '0 10px', padding: '8px 16px', fontSize: '14px' }}>
-          Export Times (CSV)
-        </button>
-      </div>
-      <SolveDetailsModal
-        solve={selectedSolve}
-        onClose={() => setSelectedSolve(null)}
-        onTogglePenalty={togglePenalty}
-        onDelete={handleDelete}
-        onUpdateScramble={handleUpdateScramble}
-      />
-    </div>
+    <BrowserRouter>
+      <Sidebar />
+      <Routes>
+        <Route path="/" element={
+          <div style={{ marginLeft: '200px' }}>
+            <Timer onSaveTime={handleSaveTime} scramble={scramble} inspectionEnabled={inspectionEnabled} inspectionDuration={inspectionDuration} onToggleInspection={toggleInspection} />
+            <div style={{ position: 'absolute', top: '120px', left: '220px', width: '250px', maxHeight: 'calc(100vh - 200px)', overflow: 'auto', zIndex: 10 }}>
+              <TimesList solves={solves} onDelete={handleDelete} onTogglePenalty={togglePenalty} onSelectSolve={setSelectedSolve} />
+            </div>
+            <div style={{ position: 'absolute', top: '120px', right: '20px', width: '250px', maxHeight: 'calc(100vh - 200px)', overflow: 'visible', zIndex: 10 }}>
+              <Stats solves={solves} />
+            </div>
+            <SolveDetailsModal
+              solve={selectedSolve}
+              onClose={() => setSelectedSolve(null)}
+              onTogglePenalty={togglePenalty}
+              onDelete={handleDelete}
+              onUpdateScramble={handleUpdateScramble}
+            />
+          </div>
+        } />
+        <Route path="/stats" element={<Statistics solves={solves} />} />
+        <Route path="/settings" element={<Settings clearTimes={clearTimes} exportTimes={exportTimes} inspectionEnabled={inspectionEnabled} inspectionDuration={inspectionDuration} setInspectionEnabled={setInspectionEnabled} setInspectionDuration={setInspectionDuration} />} />
+        <Route path="/tutorial" element={<Tutorial />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
