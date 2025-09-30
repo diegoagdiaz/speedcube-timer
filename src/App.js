@@ -23,6 +23,13 @@ function App() {
     localStorage.setItem('speedcube-solves', JSON.stringify(solves));
   }, [solves]);
 
+  useEffect(() => {
+    if (selectedSolve) {
+      const updatedSolve = solves.find(s => s.id === selectedSolve.id);
+      setSelectedSolve(updatedSolve);
+    }
+  }, [solves, selectedSolve]);
+
   const handleSaveTime = (time) => {
     const newSolve = { id: Date.now(), baseTime: time, penalty: null, scramble, timestamp: new Date() };
     setSolves(prevSolves => [...prevSolves, newSolve]);
@@ -39,6 +46,14 @@ function App() {
         ? { ...solve, penalty: solve.penalty === penaltyType ? null : penaltyType }
         : solve
     ));
+  };
+
+  const handleUpdateScramble = (solveId, newScramble) => {
+    setSolves(prevSolves =>
+      prevSolves.map(solve =>
+        solve.id === solveId ? { ...solve, scramble: newScramble } : solve
+      )
+    );
   };
 
   const clearTimes = () => {
@@ -82,6 +97,7 @@ function App() {
         onClose={() => setSelectedSolve(null)}
         onTogglePenalty={togglePenalty}
         onDelete={handleDelete}
+        onUpdateScramble={handleUpdateScramble}
       />
     </div>
   );

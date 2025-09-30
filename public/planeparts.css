@@ -1,8 +1,7 @@
 .plane-cube {
-    transform: scale3d(1, 1, 1);
-    transform-style: preserve-3d;
+    transform: scale(1) translateY(18px);
     transform-origin: center;
-    margin: 200px auto 0;
+    margin: 10px auto -20px;
     width: 80px;
     height: 90px;
 }
@@ -257,6 +256,6 @@
 @media screen and (max-width:1000px) {
     .plane-cube {
         margin: 24vh auto 0;
-        transform: scale3d(0.8, 0.8, 0.8);
+        transform: scale3d(0.6, 0.6, 0.6);
     }
 }
